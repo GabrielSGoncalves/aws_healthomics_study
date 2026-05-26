@@ -1,0 +1,46 @@
+# Genomics data — never commit large binary files
+data/
+results/
+*.bam
+*.bai
+*.cram
+*.fastq
+*.fastq.gz
+*.fq
+*.fq.gz
+*.vcf
+*.vcf.gz
+*.tbi
+*.fa
+*.fasta
+*.fa.fai
+*.dict
+
+# Nextflow
+.nextflow/
+.nextflow.log*
+work/
+trace-*.txt
+report-*.html
+timeline-*.html
+dag-*.html
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+.env
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Docker
+*.tar
+
+# AWS credentials — never commit
+.aws/
+credentials
