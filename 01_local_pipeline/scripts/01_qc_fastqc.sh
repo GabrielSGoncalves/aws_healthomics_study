@@ -27,16 +27,13 @@ echo "==> Running FastQC on all FASTQ files"
 docker run --rm \
     -v "$(realpath "${READS_DIR}"):/reads:ro" \
     -v "$(realpath "${RESULTS_DIR}"):/out" \
-    fastqc-multiqc:0.12.1 \
-    fastqc \
-        --outdir /out \
-        --threads "${THREADS}" \
-        /reads/*.fastq.gz
+    quay.io/biocontainers/fastqc:0.12.1--hdfd78af_0 \
+    bash -c "fastqc --outdir /out --threads ${THREADS} /reads/*.fastq.gz"
 
 echo "==> Aggregating reports with MultiQC"
 docker run --rm \
     -v "$(realpath "${RESULTS_DIR}"):/data" \
-    fastqc-multiqc:0.12.1 \
+    quay.io/biocontainers/multiqc:1.21--pyhdfd78af_0 \
     multiqc /data --outdir /data --filename multiqc_report.html
 
 echo ""

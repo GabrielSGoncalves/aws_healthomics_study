@@ -1,5 +1,8 @@
 # Genomics data — never commit large binary files
-data/
+# Ignore data subdirectories that hold actual sequence/reference files,
+# but allow shell scripts and READMEs inside data/ to be tracked.
+**/data/reads/
+**/data/reference/
 results/
 *.bam
 *.bai
@@ -15,6 +18,14 @@ results/
 *.fasta
 *.fa.fai
 *.dict
+*.0123
+*.amb
+*.ann
+*.bwt.2bit.64
+*.pac
+
+# Nextflow launcher script (installed to ~/bin, not part of the repo)
+/nextflow
 
 # Nextflow
 .nextflow/

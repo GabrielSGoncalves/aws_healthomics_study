@@ -21,27 +21,26 @@
 set -euo pipefail
 
 REF="../data/reference/chr20.fa"
-DBSNP="../data/reference/dbsnp_chr20.vcf.gz"
+KNOWN_SITES="../data/reference/known_sites_chr20.vcf.gz"
 RESULTS_DIR="../../results/alignment"
 SAMPLE="NA12878"
 
 echo "==> Building recalibration table (BaseRecalibrator)"
 docker run --rm \
     -v "$(realpath "$(dirname "${REF}")"):/ref:ro" \
-    -v "$(realpath "$(dirname "${DBSNP}")"):/ref:ro" \
     -v "$(realpath "${RESULTS_DIR}"):/data" \
-    gatk:4.5.0.0 \
+    broadinstitute/gatk:4.5.0.0 \
     gatk BaseRecalibrator \
         --input /data/${SAMPLE}.markdup.bam \
         --reference /ref/$(basename "${REF}") \
-        --known-sites /ref/$(basename "${DBSNP}") \
+        --known-sites /ref/$(basename "${KNOWN_SITES}") \
         --output /data/${SAMPLE}.recal.table
 
 echo "==> Applying recalibration (ApplyBQSR)"
 docker run --rm \
     -v "$(realpath "$(dirname "${REF}")"):/ref:ro" \
     -v "$(realpath "${RESULTS_DIR}"):/data" \
-    gatk:4.5.0.0 \
+    broadinstitute/gatk:4.5.0.0 \
     gatk ApplyBQSR \
         --input /data/${SAMPLE}.markdup.bam \
         --reference /ref/$(basename "${REF}") \

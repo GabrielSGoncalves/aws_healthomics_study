@@ -27,7 +27,7 @@ SAMPLE="NA12878"
 echo "==> Marking duplicates"
 docker run --rm \
     -v "$(realpath "${RESULTS_DIR}"):/data" \
-    gatk:4.5.0.0 \
+    broadinstitute/gatk:4.5.0.0 \
     gatk MarkDuplicates \
         --INPUT /data/${SAMPLE}.sorted.bam \
         --OUTPUT /data/${SAMPLE}.markdup.bam \

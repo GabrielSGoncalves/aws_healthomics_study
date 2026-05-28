@@ -34,7 +34,7 @@ docker run --rm \
     -v "$(realpath "$(dirname "${REF}")"):/ref:ro" \
     -v "$(realpath "$(dirname "${R1}")"):/reads:ro" \
     -v "$(realpath "${RESULTS_DIR}"):/out" \
-    bwa-mem2:2.2.1 \
+    quay.io/biocontainers/mulled-v2-e5d375990341c5aef3c9aff74f96f66f65375ef6:2cdf6bf1e92acbeb9b2834b1c58754167173a410-0 \
     bash -c "
         bwa-mem2 mem \
             -t ${THREADS} \
@@ -51,7 +51,7 @@ docker run --rm \
 echo "==> Alignment stats"
 docker run --rm \
     -v "$(realpath "${RESULTS_DIR}"):/out" \
-    bwa-mem2:2.2.1 \
+    quay.io/biocontainers/mulled-v2-e5d375990341c5aef3c9aff74f96f66f65375ef6:2cdf6bf1e92acbeb9b2834b1c58754167173a410-0 \
     samtools flagstat /out/${SAMPLE}.sorted.bam
 
 echo ""

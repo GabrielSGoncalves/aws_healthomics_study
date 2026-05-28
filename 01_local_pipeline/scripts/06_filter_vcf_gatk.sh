@@ -34,7 +34,7 @@ echo "==> Genotyping GVCFs (single-sample joint genotyping)"
 docker run --rm \
     -v "$(realpath "$(dirname "${REF}")"):/ref:ro" \
     -v "$(realpath "${VARIANTS_DIR}"):/out" \
-    gatk:4.5.0.0 \
+    broadinstitute/gatk:4.5.0.0 \
     gatk GenotypeGVCFs \
         --reference /ref/$(basename "${REF}") \
         --variant /out/${SAMPLE}.g.vcf.gz \
@@ -45,7 +45,7 @@ for TYPE in SNP INDEL; do
     docker run --rm \
         -v "$(realpath "$(dirname "${REF}")"):/ref:ro" \
         -v "$(realpath "${VARIANTS_DIR}"):/out" \
-        gatk:4.5.0.0 \
+        broadinstitute/gatk:4.5.0.0 \
         gatk SelectVariants \
             --reference /ref/$(basename "${REF}") \
             --variant /out/${SAMPLE}.raw.vcf.gz \
@@ -57,7 +57,7 @@ echo "==> Hard filtering SNPs"
 docker run --rm \
     -v "$(realpath "$(dirname "${REF}")"):/ref:ro" \
     -v "$(realpath "${VARIANTS_DIR}"):/out" \
-    gatk:4.5.0.0 \
+    broadinstitute/gatk:4.5.0.0 \
     gatk VariantFiltration \
         --reference /ref/$(basename "${REF}") \
         --variant /out/${SAMPLE}.raw.snp.vcf.gz \
@@ -73,7 +73,7 @@ echo "==> Hard filtering indels"
 docker run --rm \
     -v "$(realpath "$(dirname "${REF}")"):/ref:ro" \
     -v "$(realpath "${VARIANTS_DIR}"):/out" \
-    gatk:4.5.0.0 \
+    broadinstitute/gatk:4.5.0.0 \
     gatk VariantFiltration \
         --reference /ref/$(basename "${REF}") \
         --variant /out/${SAMPLE}.raw.indel.vcf.gz \
@@ -85,7 +85,7 @@ docker run --rm \
 echo "==> Merging filtered SNPs + indels"
 docker run --rm \
     -v "$(realpath "${VARIANTS_DIR}"):/out" \
-    gatk:4.5.0.0 \
+    broadinstitute/gatk:4.5.0.0 \
     gatk MergeVcfs \
         --INPUT /out/${SAMPLE}.filtered.snp.vcf.gz \
         --INPUT /out/${SAMPLE}.filtered.indel.vcf.gz \
@@ -96,5 +96,5 @@ echo "Final VCF: ${VARIANTS_DIR}/${SAMPLE}.final.vcf.gz"
 echo "PASS variants only:"
 docker run --rm \
     -v "$(realpath "${VARIANTS_DIR}"):/out" \
-    gatk:4.5.0.0 \
+    broadinstitute/gatk:4.5.0.0 \
     bash -c "zcat /out/${SAMPLE}.final.vcf.gz | grep -v '^#' | awk '\$7==\"PASS\"' | wc -l"

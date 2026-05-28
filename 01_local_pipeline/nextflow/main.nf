@@ -6,7 +6,7 @@
 //   nextflow run main.nf -profile local \
 //     --reads "data/reads/*_R{1,2}.fastq.gz" \
 //     --reference data/reference/chr20.fa \
-//     --known_sites data/reference/dbsnp_chr20.vcf.gz
+//     --known_sites data/reference/known_sites_chr20.vcf.gz
 //
 // Run on AWS HealthOmics:
 //   nextflow run main.nf -profile healthomics \
@@ -22,12 +22,13 @@ include { MARK_DUPLICATES }                          from './modules/mark_duplic
 include { BQSR }                                     from './modules/bqsr'
 include { HAPLOTYPECALLER; GENOTYPE_GVCFS; FILTER_VARIANTS } from './modules/haplotypecaller'
 
-// Validate required parameters
-if (!params.reads)       error "Missing required param: --reads"
-if (!params.reference)   error "Missing required param: --reference"
-if (!params.known_sites) error "Missing required param: --known_sites"
-
 workflow {
+
+    // Validate required parameters
+    if (!params.reads)       error "Missing required param: --reads"
+    if (!params.reference)   error "Missing required param: --reference"
+    if (!params.known_sites) error "Missing required param: --known_sites"
+
 
     // --- Input channels ---
 
@@ -45,8 +46,8 @@ workflow {
     ch_fasta_fai  = file("${params.reference}.fai")
     ch_fasta_dict = file("${params.reference.replaceAll(/\.fa(sta)?$/, '')}.dict")
 
-    // BWA-MEM2 index files (same directory as FASTA)
-    ch_fasta_index = Channel.fromPath("${params.reference}*").collect()
+    // BWA-MEM2 index files (same directory as FASTA) — dot before * to exclude the FASTA itself
+    ch_fasta_index = Channel.fromPath("${params.reference}.*").collect()
 
     // Known variant sites for BQSR
     ch_known_sites     = file(params.known_sites, checkIfExists: true)

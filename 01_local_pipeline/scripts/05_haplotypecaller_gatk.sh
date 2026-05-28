@@ -36,13 +36,12 @@ docker run --rm \
     -v "$(realpath "$(dirname "${REF}")"):/ref:ro" \
     -v "$(realpath "${ALIGNMENT_DIR}"):/bam:ro" \
     -v "$(realpath "${VARIANTS_DIR}"):/out" \
-    gatk:4.5.0.0 \
+    broadinstitute/gatk:4.5.0.0 \
     gatk HaplotypeCaller \
         --reference /ref/$(basename "${REF}") \
         --input /bam/${SAMPLE}.bqsr.bam \
         --output /out/${SAMPLE}.g.vcf.gz \
         --emit-ref-confidence GVCF \
-        --dbsnp /ref/dbsnp_chr20.vcf.gz \
         --native-pair-hmm-threads 4
 
 echo ""

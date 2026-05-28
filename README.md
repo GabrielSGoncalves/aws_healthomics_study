@@ -20,7 +20,7 @@ The same Docker images used locally are pushed to ECR and referenced in the Heal
 
 ```
 01_local_pipeline/
-├── containers/          Dockerfiles for each tool + ECR push script
+├── containers/          Official image references + ECR push script (no custom builds)
 ├── data/                Test data download scripts (GIAB NA12878 chr20)
 ├── scripts/             Step-by-step bash scripts (one per pipeline stage)
 └── nextflow/            DSL2 Nextflow pipeline (main.nf + modules/)
@@ -52,12 +52,11 @@ docs/
 ## Quick Start — Phase 1 (Local)
 
 ```bash
-# 1. Build Docker images
-cd 01_local_pipeline/containers
-bash build_and_push.sh --build-only
+# 1. No build step needed — Nextflow pulls official images automatically.
+#    See 01_local_pipeline/containers/README.md for the image registry.
 
 # 2. Download test data (GIAB NA12878 chr20 subset, ~500 MB)
-cd ../data
+cd 01_local_pipeline/data
 bash download_test_data.sh
 
 # 3. Run step-by-step scripts (educational)
@@ -71,15 +70,15 @@ cd ../nextflow
 nextflow run main.nf -profile local \
   --reads "../data/reads/*_R{1,2}.fastq.gz" \
   --reference "../data/reference/chr20.fa" \
-  --known_sites "../data/reference/dbsnp_chr20.vcf.gz"
+  --known_sites "../data/reference/known_sites_chr20.vcf.gz"
 ```
 
 ## Quick Start — Phase 2 (AWS HealthOmics)
 
 ```bash
-# 1. Push images to ECR
+# 1. Pull official images and push to ECR (one-time setup)
 cd 01_local_pipeline/containers
-bash build_and_push.sh --push --ecr-prefix 123456789.dkr.ecr.us-east-1.amazonaws.com
+bash build_and_push.sh --ecr-prefix 123456789.dkr.ecr.us-east-1.amazonaws.com
 
 # 2. Create HealthOmics stores
 cd ../../02_aws_healthomics/setup
